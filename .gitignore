@@ -1,0 +1,9 @@
+node_modules/
+playwright-report/
+test-results/
+__pycache__/
+.pytest_cache/
+report.html
+assets/
+.venv/
+practice/

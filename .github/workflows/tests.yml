@@ -1,0 +1,62 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '30 2 * * *'     # every night at 02:30 UTC
+  workflow_dispatch:          # "Run workflow" button in the Actions tab
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false        # let every browser finish even if one fails
+      matrix:
+        include:
+          - name: chromium
+            args: --browser chromium
+          - name: firefox
+            args: --browser firefox
+          - name: mobile
+            args: --browser chromium --device "Pixel 7"
+    name: playwright (${{ matrix.name }})
+    defaults:
+      run:
+        working-directory: playwright-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python -m playwright install --with-deps chromium firefox
+      - run: pytest ${{ matrix.args }} --html=report.html --self-contained-html
+      - uses: actions/upload-artifact@v4
+        if: always()           # upload reports even when tests fail
+        with:
+          name: playwright-${{ matrix.name }}-report
+          path: |
+            playwright-tests/report.html
+            playwright-tests/test-results/
+          retention-days: 14
+
+  selenium:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: selenium-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: pytest             # Chrome is preinstalled on GitHub runners
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selenium-report
+          path: selenium-tests/report.html
+          retention-days: 14
