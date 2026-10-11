@@ -1,6 +1,6 @@
 # 🛒 SauceDemo Test Automation Framework (Python)
 
-![Tests](https://github.com/Kaustubh3197/saucedemo-test-automation/actions/workflows/tests.yml/badge.svg)
+[![E2E Tests](https://github.com/Kaustubh3197/saucedemo-test-automation/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Kaustubh3197/saucedemo-test-automation/actions/workflows/tests.yml)
 
 End-to-end test automation for an e-commerce web app ([saucedemo.com](https://www.saucedemo.com), a public practice store),
 written entirely in **Python** with **two industry-standard browser tools** and run automatically through **CI/CD**.
